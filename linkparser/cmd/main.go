@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"gotutorial/linkparser"
-	"gotutorial/linkparser_test"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/Ghytro/golang_studying_but_stu_is_silent/linkparser"
 
 	"golang.org/x/net/html"
 )
@@ -21,12 +21,7 @@ func logError(err error) {
 
 func main() {
 	htmlDocumentPath := flag.String("path", "", "A path to html document needed to parse. If the name of the document is not passed, the content will be read from stdin.")
-	canonizeTests := flag.Bool("canonizeTests", false, "To run this tool for test canonization, and not for usage.")
 	flag.Parse()
-	if *canonizeTests {
-		linkparser_test.Canonize()
-		return
-	}
 	var strDocContent string
 	if *htmlDocumentPath != "" {
 		docBytes, err := os.ReadFile(*htmlDocumentPath)

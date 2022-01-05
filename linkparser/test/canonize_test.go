@@ -3,10 +3,11 @@ package linkparser_test
 import (
 	"encoding/json"
 	"fmt"
-	"gotutorial/linkparser"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/Ghytro/golang_studying_but_stu_is_silent/linkparser"
 
 	"golang.org/x/net/html"
 )
