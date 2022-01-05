@@ -1,4 +1,4 @@
-module gotutorial/linkparser
+module github.com/Ghytro/golang_studying_but_stu_is_silent/linkparser
 
 go 1.17
 
