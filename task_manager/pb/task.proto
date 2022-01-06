@@ -1,0 +1,11 @@
+syntax = "proto3";
+option go_package = "/pb";
+
+message Task {
+    string name = 1;
+    string deadline = 2;
+}
+
+message TaskList {
+    repeated Task tasks = 1;
+}
