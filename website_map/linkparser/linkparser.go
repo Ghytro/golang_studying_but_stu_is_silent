@@ -53,3 +53,30 @@ func GetLinks(document *html.Node) []Link {
 	dfs(document)
 	return links
 }
+
+func substrIndex(s, substr string, startIndex int) int { // searching substring's first occurence starting from a given index
+	ind := strings.Index(s[startIndex:], substr)
+	if ind != -1 {
+		return strings.Index(s[startIndex:], substr) + startIndex
+	}
+	return -1
+}
+
+func GetProtocol(url string) string {
+	protocols := []string{"http://", "https://"}
+	for _, p := range protocols {
+		if strings.HasPrefix(url, p) {
+			return p[:strings.Index(p, ":")]
+		}
+	}
+	return ""
+}
+
+func GetDomain(url string) string {
+	protocol := GetProtocol(url)
+	index := substrIndex(url, "/", len(protocol)+3)
+	if index == -1 {
+		index = len(url)
+	}
+	return url[len(protocol)+3 : index]
+}

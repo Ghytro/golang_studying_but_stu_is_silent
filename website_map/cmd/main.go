@@ -28,7 +28,7 @@ func debugOutput(message string) {
 
 type void struct{}
 
-func dfs(g *graph.Graph, visited map[string]void, currentUrl string, maxdepth int, curDepth int) {
+func dfs(g *graph.Graph, visited map[string]void, currentUrl string, maxdepth, curDepth int, sameDomain bool) {
 	if curDepth > maxdepth {
 		return
 	}
@@ -48,19 +48,19 @@ func dfs(g *graph.Graph, visited map[string]void, currentUrl string, maxdepth in
 	links := linkparser.GetLinks(doc)
 
 	for _, l := range links {
-		if strings.HasPrefix(l.Href, "https://") {
+		if strings.HasPrefix(l.Href, "http") && (!sameDomain || sameDomain && linkparser.GetDomain(currentUrl) == linkparser.GetDomain(l.Href)) {
 			g.AddEdge(graph.Edge{currentUrl, l.Href})
 			if _, ok := visited[l.Href]; !ok {
-				dfs(g, visited, l.Href, maxdepth, curDepth+1)
+				dfs(g, visited, l.Href, maxdepth, curDepth+1, sameDomain)
 			}
 		}
 	}
 }
 
-func GetMapGraph(rootUrl string, depth int) *graph.Graph {
+func GetMapGraph(rootUrl string, depth int, sameDomain bool) *graph.Graph {
 	g := graph.NewGraph()
 	visited := make(map[string]void)
-	dfs(g, visited, rootUrl, depth, 0)
+	dfs(g, visited, rootUrl, depth, 0, sameDomain)
 	return g
 }
 
@@ -70,11 +70,12 @@ func main() {
 	websiteUrl := flag.String("url", "", "A url of a website to build a map for.")
 	debug = flag.Bool("debug", false, "If you specify this flag, the program will print the debug output of the visited websites")
 	depth := flag.Int("depth", 3, "Maximum depth of the search to reach different websites")
+	sameDomain := flag.Bool("sameDomain", true, "Indicates if we need to build map only for the domain specified in the argument -websiteUrl")
 	flag.Parse()
 	if *websiteUrl == "" {
 		fmt.Println("Incorrect usage of a tool. Url of a website not specified")
 		return
 	}
-	g := GetMapGraph(*websiteUrl, *depth)
+	g := GetMapGraph(*websiteUrl, *depth, *sameDomain)
 	fmt.Print(g.ToGraphviz("G"))
 }
